@@ -1,0 +1,134 @@
+.transactions-card {
+  margin-top: 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-table th {
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.transactions-table tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.transactions-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.amount-header {
+  text-align: left;
+}
+
+.amount-cell {
+  text-align: left;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.amount-total {
+  text-align: right;
+  font-weight: 600;
+  text-align: left;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.total-label {
+  font-weight: 600;
+  text-align: left;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.amount-total.negative-total {
+  color: #f44336;
+}
+
+.amount-cell.income {
+  color: #4caf50;
+}
+
+.amount-cell.expense {
+  color: #f44336;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.type-badge.income {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.type-badge.expense {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+@media (max-width: 960px) {
+  .transactions-table {
+    font-size: 13px;
+  }
+
+  .transactions-table td,
+  .transactions-table th {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 700px) {
+  .transactions-card {
+    margin: 0 -16px;
+  }
+
+  .transactions-table {
+    font-size: 12px;
+  }
+
+  .transactions-table td,
+  .transactions-table th {
+    padding: 8px 4px;
+  }
+
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+}

@@ -1,0 +1,81 @@
+.expense-form {
+  display: grid;
+  gap: 16px;
+}
+
+.top-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.left-column,
+.right-column {
+  display: grid;
+  gap: 12px;
+}
+
+.left-column mat-form-field,
+.right-column mat-form-field {
+  width: 100%;
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+  gap: 12px;
+}
+
+.category-main-field {
+  grid-column: 1;
+}
+
+.custom-category-field {
+  grid-column: 2;
+}
+
+.notes-field textarea {
+  min-height: 236px;
+  resize: vertical;
+}
+
+.type-group {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 960px) {
+  .top-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .notes-field textarea {
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 700px) {
+  .category-row {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-category-field {
+    grid-column: 1;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+}

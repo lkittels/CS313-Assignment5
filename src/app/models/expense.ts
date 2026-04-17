@@ -1,21 +1,24 @@
 export interface Expense {
   id?: string;
   amount: number;
-  category: string;
+  category: ExpenseCategory | string;
   date: Date;
   notes?: string;
   type: ExpenseType;
 }
 
-export const PREDEFINED_EXPENSE_CATEGORIES = [
-  'Food',
-  'Rent',
-  'Travel',
-  'Utilities',
-  'Entertainment',
-  'Other'
-] as const;
-
-export type PredefinedExpenseCategory = (typeof PREDEFINED_EXPENSE_CATEGORIES)[number];
+export type ExpenseCategory =
+  | 'Food'
+  | 'Rent'
+  | 'Travel'
+  | 'Entertainment'
+  | 'Healthcare'
+  | 'Shopping'
+  | 'Utilities'
+  | 'Education'
+  | 'Salary'
+  | 'Freelance'
+  | 'Investment'
+  | 'Other';
 
 export type ExpenseType = 'Income' | 'Expense';

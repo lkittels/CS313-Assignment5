@@ -1,0 +1,94 @@
+<mat-card class="expense-card">
+  <mat-card-header>
+    <mat-card-title>Add Transaction</mat-card-title>
+    <mat-card-subtitle>Track income and expenses</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form class="expense-form" (ngSubmit)="addExpense()">
+      <div class="top-grid">
+        <div class="left-column">
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              step="0.01"
+              [value]="amount()"
+              (input)="amount.set($any($event.target).valueAsNumber || 0)"
+              required
+            />
+            <span matTextPrefix>$&nbsp;</span>
+          </mat-form-field>
+
+          <div class="category-row">
+            <mat-form-field appearance="outline" class="category-main-field">
+              <mat-label>Category</mat-label>
+              <mat-select
+                [value]="category()"
+                (selectionChange)="category.set($any($event).value)"
+                required
+              >
+                @for (categoryOption of expenseService.allCategories(); track categoryOption) {
+                  <mat-option [value]="categoryOption">{{ categoryOption }}</mat-option>
+                }
+                <mat-option [value]="customCategoryValue">Custom category...</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            @if (category() === customCategoryValue) {
+              <mat-form-field appearance="outline" class="custom-category-field">
+                <mat-label>Custom Category</mat-label>
+                <input
+                  matInput
+                  [value]="customCategory()"
+                  (input)="customCategory.set($any($event.target).value)"
+                  placeholder="Type your category"
+                  required
+                />
+              </mat-form-field>
+            }
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [value]="date()"
+              (dateChange)="date.set($any($event).value || date())"
+              required
+            />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="right-column">
+          <mat-form-field appearance="outline" class="notes-field">
+            <mat-label>Notes</mat-label>
+            <textarea
+              matInput
+              rows="10"
+              [value]="notes()"
+              (input)="notes.set($any($event.target).value)"
+              placeholder="Optional details"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-radio-group class="type-group" [value]="type()" (change)="type.set($any($event).value)">
+        <mat-radio-button value="Expense">Expense</mat-radio-button>
+        <mat-radio-button value="Income">Income</mat-radio-button>
+      </mat-radio-group>
+
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="resetForm()">Reset</button>
+        <button mat-flat-button type="submit" color="primary">Save Transaction</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
