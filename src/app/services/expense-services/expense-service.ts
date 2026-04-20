@@ -1,6 +1,14 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { Expense, ExpenseCategory } from '../../models/expense';
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+  type Unsubscribe,
+} from 'firebase/firestore';
 import { db } from '../../firebase.config';
 
 @Injectable({
@@ -8,6 +16,7 @@ import { db } from '../../firebase.config';
 })
 export class ExpenseService {
   expenses = signal<Expense[]>([]);
+  editingExpense = signal<Expense | null>(null);
 
   predefinedCategoryList = signal<ExpenseCategory[]>([
     'Food',
@@ -62,10 +71,15 @@ export class ExpenseService {
   ]);
 
   private expenseCollection = collection(db, 'expenses');
+  private expenseSnapshotUnsubscribe: Unsubscribe | null = null;
 
   //READ (real-time)
   loadExpenses() {
-    onSnapshot(this.expenseCollection, (snapshot) => {
+    if (this.expenseSnapshotUnsubscribe) {
+      return;
+    }
+
+    this.expenseSnapshotUnsubscribe = onSnapshot(this.expenseCollection, (snapshot) => {
       const expensesData = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -76,9 +90,26 @@ export class ExpenseService {
     });
   }
 
+  beginEditingExpense(expense: Expense) {
+    this.editingExpense.set(expense);
+  }
+
+  clearEditingExpense() {
+    this.editingExpense.set(null);
+  }
+
   //CREATE
   async addExpense(expense: Expense) {
     await addDoc(this.expenseCollection, expense);
-    this.loadExpenses();
+  }
+  //UPDATE
+  async updateExpense(id: string, expense: Partial<Expense>) {
+    const expenseRef = doc(db, 'expenses', id);
+    await updateDoc(expenseRef, { ...expense });
+  }
+  //DELETE
+  async deleteExpense(id: string) {
+    const expenseRef = doc(db, 'expenses', id);
+    await deleteDoc(expenseRef);
   }
 }

@@ -1,5 +1,14 @@
+
+
 .transactions-card {
   margin-top: 0;
+}
+
+.actions-row {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 8px;
+  flex-wrap: wrap;
 }
 
 .empty-state {
@@ -111,6 +120,10 @@
 @media (max-width: 700px) {
   .transactions-card {
     margin: 0 -16px;
+  }
+
+  .actions-row {
+    padding: 0 16px 12px;
   }
 
   .transactions-table {

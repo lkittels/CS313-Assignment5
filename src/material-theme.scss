@@ -1,4 +1,3 @@
-
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material
 // components according to the Material 3 design spec.
@@ -8,14 +7,33 @@
 
 html {
   height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$blue-palette,
-      tertiary: mat.$cyan-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$cyan-palette,
+        error: mat.$red-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  .error-button {
+    background-color: var(--mat-sys-error) !important;
+    color: var(--mat-sys-on-error) !important;
+
+    // Keep Material interaction states aligned with the error palette.
+    --mat-text-button-state-layer-color: var(--mat-sys-on-error);
+    --mat-filled-button-state-layer-color: var(--mat-sys-on-error);
+    --mat-protected-button-state-layer-color: var(--mat-sys-on-error);
+
+    --mdc-filled-button-container-color: var(--mat-sys-error);
+    --mdc-filled-button-label-text-color: var(--mat-sys-on-error);
+    --mdc-protected-button-container-color: var(--mat-sys-error);
+    --mdc-protected-button-label-text-color: var(--mat-sys-on-error);
+    --mat-protected-button-state-layer-color: var(--mat-sys-on-error);
+  }
 }
 
 body {

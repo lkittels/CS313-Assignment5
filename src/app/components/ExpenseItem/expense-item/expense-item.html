@@ -1,11 +1,13 @@
 <mat-card class="expense-card">
   <mat-card-header>
-    <mat-card-title>Add Transaction</mat-card-title>
+    <mat-card-title>
+      {{ editingExpense() ? 'Edit Transaction' : 'Add Transaction' }}
+    </mat-card-title>
     <mat-card-subtitle>Track income and expenses</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    <form class="expense-form" (ngSubmit)="addExpense()">
+    <form class="expense-form" #expenseForm="ngForm" (ngSubmit)="addExpense(expenseForm)">
       <div class="top-grid">
         <div class="left-column">
           <mat-form-field appearance="outline">
@@ -15,19 +17,29 @@
               type="number"
               min="0"
               step="0.01"
-              [value]="amount()"
-              (input)="amount.set($any($event.target).valueAsNumber || 0)"
+              name="amount"
+              [ngModel]="amount()"
+              (ngModelChange)="amount.set($event)"
+              #amountModel="ngModel"
               required
             />
             <span matTextPrefix>$&nbsp;</span>
+            @if (amountModel.errors?.['required'] && expenseForm.submitted) {
+              <mat-error>Amount is required.</mat-error>
+            }
+            @if (amountModel.errors?.['min'] && expenseForm.submitted) {
+              <mat-error>Amount must be greater than 0.</mat-error>
+            }
           </mat-form-field>
 
           <div class="category-row">
             <mat-form-field appearance="outline" class="category-main-field">
               <mat-label>Category</mat-label>
               <mat-select
-                [value]="category()"
-                (selectionChange)="category.set($any($event).value)"
+                name="category"
+                [ngModel]="category()"
+                (ngModelChange)="category.set($event)"
+                #categoryModel="ngModel"
                 required
               >
                 @for (categoryOption of expenseService.allCategories(); track categoryOption) {
@@ -35,6 +47,9 @@
                 }
                 <mat-option [value]="customCategoryValue">Custom category...</mat-option>
               </mat-select>
+              @if (categoryModel.errors?.['required'] && expenseForm.submitted) {
+                <mat-error>Category is required.</mat-error>
+              }
             </mat-form-field>
 
             @if (category() === customCategoryValue) {
@@ -42,11 +57,16 @@
                 <mat-label>Custom Category</mat-label>
                 <input
                   matInput
-                  [value]="customCategory()"
-                  (input)="customCategory.set($any($event.target).value)"
+                  name="customCategory"
+                  [ngModel]="customCategory()"
+                  (ngModelChange)="customCategory.set($event)"
+                  #customCategoryModel="ngModel"
                   placeholder="Type your category"
                   required
                 />
+                @if (customCategoryModel.errors?.['required'] && expenseForm.submitted) {
+                  <mat-error>Custom category is required.</mat-error>
+                }
               </mat-form-field>
             }
           </div>
@@ -56,13 +76,18 @@
             <input
               matInput
               [matDatepicker]="picker"
-              [value]="date()"
-              (dateChange)="date.set($any($event).value || date())"
+              name="date"
+              [ngModel]="date()"
+              (ngModelChange)="date.set($event)"
+              #dateModel="ngModel"
               required
             />
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            @if (dateModel.errors?.['required'] && expenseForm.submitted) {
+              <mat-error>Date is required.</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -72,22 +97,30 @@
             <textarea
               matInput
               rows="10"
-              [value]="notes()"
-              (input)="notes.set($any($event.target).value)"
+              name="notes"
+              [ngModel]="notes()"
+              (ngModelChange)="notes.set($event)"
               placeholder="Optional details"
             ></textarea>
           </mat-form-field>
         </div>
       </div>
 
-      <mat-radio-group class="type-group" [value]="type()" (change)="type.set($any($event).value)">
+      <mat-radio-group
+        class="type-group"
+        name="type"
+        [ngModel]="type()"
+        (ngModelChange)="type.set($event)"
+      >
         <mat-radio-button value="Expense">Expense</mat-radio-button>
         <mat-radio-button value="Income">Income</mat-radio-button>
       </mat-radio-group>
 
       <div class="actions">
-        <button mat-stroked-button type="button" (click)="resetForm()">Reset</button>
-        <button mat-flat-button type="submit" color="primary">Save Transaction</button>
+        <button mat-stroked-button type="button" (click)="resetForm(expenseForm)">Reset</button>
+        <button mat-flat-button type="submit" color="primary">
+          {{ editingExpense() ? 'Update Transaction' : 'Save Transaction' }}
+        </button>
       </div>
     </form>
   </mat-card-content>

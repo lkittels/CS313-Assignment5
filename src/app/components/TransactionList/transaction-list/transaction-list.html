@@ -4,6 +4,25 @@
     <mat-card-subtitle>View all your income and expenses</mat-card-subtitle>
   </mat-card-header>
 
+  <div class="actions-row">
+    <button
+      matButton="elevated"
+      (click)="editSelected()"
+      [disabled]="getSelectedRows().length !== 1"
+    >
+      Edit
+    </button>
+
+    <button
+      matButton="elevated"
+      class="error-button"
+      (click)="deleteSelected()"
+      [disabled]="getSelectedRows().length === 0"
+    >
+      Delete
+    </button>
+  </div>
+
   <mat-card-content>
     @if (expenseService.expenses().length === 0) {
       <div class="empty-state">
@@ -12,6 +31,27 @@
       </div>
     } @else {
       <table mat-table [dataSource]="tableRows()" class="transactions-table">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="toggleAllRows()"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              [aria-label]="checkboxLabel()"
+            ></mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let expense">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="toggleRow(expense)"
+              [checked]="isRowSelected(expense)"
+              [aria-label]="checkboxLabel(expense)"
+            ></mat-checkbox>
+          </td>
+          <td mat-footer-cell class="total-label" *matFooterCellDef>Total</td>
+        </ng-container>
+
         <!-- Date Column -->
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Date</th>
@@ -20,7 +60,7 @@
               ? (expense.date | date: 'MMM d, yyyy')
               : (expense.date | date: 'MMM d, yyyy') }}
           </td>
-          <td mat-footer-cell class="total-label" *matFooterCellDef>Total</td>
+          <td mat-footer-cell class="total-label" *matFooterCellDef></td>
         </ng-container>
 
         <!-- Category Column -->
