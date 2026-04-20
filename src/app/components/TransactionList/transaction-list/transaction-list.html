@@ -24,6 +24,80 @@
   </div>
 
   <mat-card-content>
+    <div class="filter-row">
+      <mat-form-field appearance="outline">
+        <mat-label>From Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startPicker"
+          name="startDate"
+          [ngModel]="filters().startDate"
+          (ngModelChange)="onDateFilterChange('startDate', $event)"
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endPicker"
+          name="endDate"
+          [ngModel]="filters().endDate"
+          (ngModelChange)="onDateFilterChange('endDate', $event)"
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select
+          name="category"
+          [ngModel]="filters().category"
+          (ngModelChange)="onCategoryFilterChange($event)"
+        >
+          <mat-option value="">All categories</mat-option>
+          @for (categoryOption of allCategories(); track categoryOption) {
+            <mat-option [value]="categoryOption">{{ categoryOption }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min Amount</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="filters().minAmount"
+          (ngModelChange)="onAmountFilterChange('minAmount', $event)"
+          placeholder="0"
+        />
+        <span matTextPrefix>$&nbsp;</span>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Max Amount</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="filters().maxAmount"
+          (ngModelChange)="onAmountFilterChange('maxAmount', $event)"
+          placeholder="No max"
+        />
+        <span matTextPrefix>$&nbsp;</span>
+      </mat-form-field>
+
+      <button mat-stroked-button type="button" (click)="clearFilters()">Clear Filters</button>
+    </div>
+
     @if (expenseService.expenses().length === 0) {
       <div class="empty-state">
         <mat-icon>receipt</mat-icon>
@@ -103,10 +177,10 @@
           <td
             mat-footer-cell
             class="amount-total"
-            [class.negative-total]="expenseService.netIncome() < 0"
+            [class.negative-total]="filteredNetIncome() < 0"
             *matFooterCellDef
           >
-            {{ expenseService.netIncome() | currency }}
+            {{ filteredNetIncome() | currency }}
           </td>
         </ng-container>
 

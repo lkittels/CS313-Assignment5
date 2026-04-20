@@ -42,7 +42,7 @@
                 #categoryModel="ngModel"
                 required
               >
-                @for (categoryOption of expenseService.allCategories(); track categoryOption) {
+                @for (categoryOption of expenseItemService.allCategories(); track categoryOption) {
                   <mat-option [value]="categoryOption">{{ categoryOption }}</mat-option>
                 }
                 <mat-option [value]="customCategoryValue">Custom category...</mat-option>
