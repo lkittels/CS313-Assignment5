@@ -1,1 +1,118 @@
-<p>dashboard works!</p>
+<mat-grid-list cols="5" rowHeight="100px">
+  <mat-grid-tile colspan="4" rowspan="3.5">
+    <section class="overview-panel" aria-label="Monthly overview">
+      <div class="overview-header">
+        <h3>Overview</h3>
+        <p>This month at a glance</p>
+      </div>
+
+      <div class="overview-grid">
+        <article class="overview-card summary-card income-card">
+          <span class="overview-label">Monthly Income</span>
+          <strong>{{ overviewSummary().income | number: '1.0-2' }}</strong>
+          <span class="overview-meta">Net: {{ overviewSummary().net | number: '1.0-2' }}</span>
+        </article>
+
+        <article class="overview-card summary-card spending-card">
+          <span class="overview-label">Monthly Spending</span>
+          <strong>{{ overviewSummary().spending | number: '1.0-2' }}</strong>
+          <span class="overview-meta">Tracked for the current month</span>
+        </article>
+
+        <article class="overview-card summary-card highest-expense-card">
+          <span class="overview-label">Highest Expense</span>
+          @if (highestExpense()) {
+            <span class="highest-expense-row">
+              <mat-icon [style.color]="highestExpense()!.color" aria-hidden="true">{{
+                highestExpense()!.icon
+              }}</mat-icon>
+              <strong>{{ highestExpense()!.amount | number: '1.0-2' }}</strong>
+            </span>
+            <span class="overview-meta">{{ highestExpense()!.name }}</span>
+          } @else {
+            <span class="overview-meta">No expenses recorded this month.</span>
+          }
+        </article>
+
+        <article class="overview-card comparison-card">
+          <span class="overview-label">Budget vs Actual</span>
+          <strong
+            >{{ overviewSummary().budgetTotal | number: '1.0-2' }} budget /
+            {{ overviewSummary().spending | number: '1.0-2' }} actual</strong
+          >
+          <span class="overview-meta">
+            @if (overviewSummary().budgetDifference >= 0) {
+              Remaining: {{ overviewSummary().remainingBudget | number: '1.0-2' }}
+            } @else {
+              Over by: {{ overviewSummary().budgetDifference * -1 | number: '1.0-2' }}
+            }
+            · Usage: {{ overviewSummary().budgetUsagePercent | number: '1.0-0' }}%
+          </span>
+          <div class="comparison-bar" aria-hidden="true">
+            <span class="comparison-fill" [style.width.%]="budgetUsageFillPercent()"></span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="3.5">
+    <section class="budget-list" aria-label="Categories near budget">
+      <h3>Near Budget</h3>
+      @if (nearBudgetCategories().length === 0) {
+        <p class="empty-state">No categories near budget.</p>
+      } @else {
+        <ul>
+          @for (category of nearBudgetCategories(); track category.name) {
+            <li>
+              <span class="category-name-row">
+                <mat-icon [style.color]="category.color" aria-hidden="true">{{
+                  category.icon
+                }}</mat-icon>
+                <span class="category-name">{{ category.name }}</span>
+              </span>
+              <span class="category-meta"
+                >{{ category.spent | number: '1.0-2' }} /
+                {{ category.budget | number: '1.0-2' }} ({{
+                  category.percentUsed | number: '1.0-0'
+                }}%)</span
+              >
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="3.5" routerLink="/charts">
+    <app-pie-chart></app-pie-chart>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="3.5" routerLink="/charts">
+    <app-bar-chart></app-bar-chart>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="3.5">
+    <section class="budget-list" aria-label="Categories over budget">
+      <h3>Over Budget</h3>
+      @if (overBudgetCategories().length === 0) {
+        <p class="empty-state">No categories over budget.</p>
+      } @else {
+        <ul>
+          @for (category of overBudgetCategories(); track category.name) {
+            <li>
+              <span class="category-name-row">
+                <mat-icon [style.color]="category.color" aria-hidden="true">{{
+                  category.icon
+                }}</mat-icon>
+                <span class="category-name">{{ category.name }}</span>
+              </span>
+              <span class="category-meta"
+                >{{ category.spent | number: '1.0-2' }} /
+                {{ category.budget | number: '1.0-2' }} ({{
+                  category.percentUsed | number: '1.0-0'
+                }}%)</span
+              >
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </mat-grid-tile>
+</mat-grid-list>
