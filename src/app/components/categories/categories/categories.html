@@ -1,0 +1,127 @@
+<section class="categories-page">
+  <mat-card class="category-form-card">
+    <mat-card-header>
+      <mat-card-title>{{
+        editingCategoryId() ? 'Edit Category' : 'Create Category'
+      }}</mat-card-title>
+      <mat-card-subtitle>
+        Manage category name, icon, color, and monthly budget in one place.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="category-form" [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" required />
+          @if (formSubmitted() && !isNameValid()) {
+            <mat-error>Category name is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="icon-picker" role="group" aria-label="Choose category icon">
+          <div class="icon-picker-label">Icon</div>
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="icon-dropdown-trigger"
+            [matMenuTriggerFor]="iconMenu"
+            #iconMenuTrigger="matMenuTrigger"
+          >
+            <mat-icon>{{ categoryForm.controls.icon.value }}</mat-icon>
+            Choose Icon
+          </button>
+
+          <mat-menu #iconMenu="matMenu" class="icon-menu" xPosition="before">
+            <div class="icon-dropdown-grid" (click)="$event.stopPropagation()">
+              @for (iconOption of iconOptions; track iconOption) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="iconOption"
+                  [class.selected-icon]="categoryForm.controls.icon.value === iconOption"
+                  (click)="
+                    categoryForm.controls.icon.setValue(iconOption); iconMenuTrigger.closeMenu()
+                  "
+                >
+                  <mat-icon>{{ iconOption }}</mat-icon>
+                </button>
+              }
+            </div>
+          </mat-menu>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <input matInput type="color" formControlName="color" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Monthly Budget</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            step="0.01"
+            formControlName="monthlyBudget"
+            required
+          />
+          <span matTextPrefix>$&nbsp;</span>
+          @if (formSubmitted() && !isBudgetValid()) {
+            <mat-error>Monthly budget must be 0 or greater.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-checkbox class="active-check" formControlName="isActive">
+          Active Category
+        </mat-checkbox>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="resetForm()">Clear</button>
+          <button mat-flat-button color="primary" type="submit">
+            {{ editingCategoryId() ? 'Update Category' : 'Save Category' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <section class="category-list-section">
+    <h2>Category List</h2>
+
+    @if (categories().length === 0) {
+      <mat-card class="empty-card">
+        <mat-card-content>
+          No categories yet. Create your first category using the form above.
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <div class="category-grid">
+        @for (category of categories(); track category.id ?? category.name) {
+          <mat-card class="category-card">
+            <mat-card-content>
+              <div class="category-row">
+                <div class="category-meta">
+                  <span class="color-swatch" [style.background]="category.color"></span>
+                  <mat-icon>{{ category.icon || 'category' }}</mat-icon>
+                  <div>
+                    <div class="category-name">{{ category.name }}</div>
+                    <div class="category-subtext">
+                      Budget: {{ category.monthlyBudget | currency }}
+                    </div>
+                    <div class="category-subtext">
+                      Status: {{ category.isActive ? 'Active' : 'Inactive' }}
+                    </div>
+                  </div>
+                </div>
+
+                <button mat-stroked-button type="button" (click)="startEdit(category)">Edit</button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  </section>
+</section>

@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, OnDestroy, signal } from '@angular/core';
 import { Expense, ExpenseCategory } from '../../models/expense';
 import {
   addDoc,
@@ -14,7 +14,7 @@ import { db } from '../../firebase.config';
 @Injectable({
   providedIn: 'root',
 })
-export class ExpenseService {
+export class ExpenseService implements OnDestroy {
   expenses = signal<Expense[]>([]);
   editingExpense = signal<Expense | null>(null);
 
@@ -111,5 +111,10 @@ export class ExpenseService {
   async deleteExpense(id: string) {
     const expenseRef = doc(db, 'expenses', id);
     await deleteDoc(expenseRef);
+  }
+
+  ngOnDestroy(): void {
+    this.expenseSnapshotUnsubscribe?.();
+    this.expenseSnapshotUnsubscribe = null;
   }
 }

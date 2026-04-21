@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Expense } from '../../models/expense';
-import { DeleteConfirmDialog } from '../../components/DeleteConfirmDialog/delete-confirm-dialog/delete-confirm-dialog';
+import { DeleteConfirmDialogComponent } from '../../components/DeleteConfirmDialog/delete-confirm-dialog/delete-confirm-dialog';
 import { ExpenseService } from '../expense-services/expense-service';
 
 @Injectable({
@@ -85,7 +85,7 @@ export class TransactionListService {
       ? 'This will delete all transactions that are currently on this page and cannot be undone.'
       : 'This will delete the selected transaction and cannot be undone.';
 
-    const dialogRef = this.dialog.open(DeleteConfirmDialog, {
+    const dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
       data: { message },
       maxWidth: '420px',
       width: '90vw',

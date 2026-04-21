@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -9,6 +9,7 @@ export interface DeleteConfirmDialogData {
 @Component({
   selector: 'app-delete-confirm-dialog',
   imports: [MatDialogModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 mat-dialog-title>Confirm Delete</h2>
     <mat-dialog-content>
@@ -20,9 +21,9 @@ export interface DeleteConfirmDialogData {
     </mat-dialog-actions>
   `,
 })
-export class DeleteConfirmDialog {
+export class DeleteConfirmDialogComponent {
   protected readonly data = inject<DeleteConfirmDialogData>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject(MatDialogRef<DeleteConfirmDialog, boolean>);
+  private readonly dialogRef = inject(MatDialogRef<DeleteConfirmDialogComponent, boolean>);
 
   cancel() {
     this.dialogRef.close(false);

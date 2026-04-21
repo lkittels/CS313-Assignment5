@@ -52,6 +52,25 @@
   gap: 10px;
 }
 
+.category-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.category-option-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
 @media (max-width: 960px) {
   .top-grid {
     grid-template-columns: 1fr;

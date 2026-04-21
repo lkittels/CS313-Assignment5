@@ -62,7 +62,18 @@
         >
           <mat-option value="">All categories</mat-option>
           @for (categoryOption of allCategories(); track categoryOption) {
-            <mat-option [value]="categoryOption">{{ categoryOption }}</mat-option>
+            <mat-option [value]="categoryOption">
+              <span class="category-option">
+                <span
+                  class="category-color-dot"
+                  [style.background]="getCategoryColor(categoryOption)"
+                ></span>
+                <mat-icon class="category-option-icon">{{
+                  getCategoryIcon(categoryOption)
+                }}</mat-icon>
+                <span>{{ categoryOption }}</span>
+              </span>
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -140,7 +151,18 @@
         <!-- Category Column -->
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef>Category</th>
-          <td mat-cell *matCellDef="let expense">{{ expense.category }}</td>
+          <td mat-cell *matCellDef="let expense">
+            <span class="category-cell">
+              <span
+                class="category-color-dot"
+                [style.background]="getCategoryColor(expense.category)"
+              ></span>
+              <mat-icon class="category-option-icon">{{
+                getCategoryIcon(expense.category)
+              }}</mat-icon>
+              <span>{{ expense.category }}</span>
+            </span>
+          </td>
           <td mat-footer-cell class="total-label" *matFooterCellDef></td>
         </ng-container>
 

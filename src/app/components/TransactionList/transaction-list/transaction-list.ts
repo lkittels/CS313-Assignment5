@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { CategoryService } from '../../../services/category-services/category-services';
 
 @Component({
   selector: 'app-transaction-list',
@@ -34,7 +35,8 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './transaction-list.html',
   styleUrl: './transaction-list.css',
 })
-export class TransactionList {
+export class TransactionListComponent {
+  categoryService = inject(CategoryService);
   expenseService = inject(ExpenseService);
   private transactionListService = inject(TransactionListService);
 
@@ -105,5 +107,13 @@ export class TransactionList {
 
   async deleteSelected() {
     await this.transactionListService.deleteSelected(this.tableRows());
+  }
+
+  getCategoryIcon(categoryName: string): string {
+    return this.categoryService.getCategoryIcon(categoryName);
+  }
+
+  getCategoryColor(categoryName: string): string {
+    return this.categoryService.getCategoryColor(categoryName);
   }
 }

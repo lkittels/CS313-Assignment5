@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Expense, ExpenseCategory, ExpenseType } from '../../models/expense';
+import { CategoryService } from '../category-services/category-services';
 import { ExpenseService } from '../expense-services/expense-service';
 
 @Injectable({
@@ -10,10 +11,12 @@ import { ExpenseService } from '../expense-services/expense-service';
 export class ExpenseItemService {
   readonly customCategoryValue = '__custom_category__';
 
+  private categoryService = inject(CategoryService);
   private expenseService = inject(ExpenseService);
   private router = inject(Router);
 
   readonly editingExpense = this.expenseService.editingExpense;
+
   readonly allCategories = this.expenseService.allCategories;
 
   readonly amount = signal<number | null>(null);
@@ -71,6 +74,7 @@ export class ExpenseItemService {
     this.date.set(new Date());
     this.notes.set('');
     this.type.set('Expense');
+
     this.expenseService.clearEditingExpense();
 
     form?.resetForm({
@@ -81,6 +85,14 @@ export class ExpenseItemService {
       notes: '',
       type: 'Expense',
     });
+  }
+
+  getCategoryIcon(categoryName: string): string {
+    return this.categoryService.getCategoryIcon(categoryName);
+  }
+
+  getCategoryColor(categoryName: string): string {
+    return this.categoryService.getCategoryColor(categoryName);
   }
 
   private resolveCategory(): string {

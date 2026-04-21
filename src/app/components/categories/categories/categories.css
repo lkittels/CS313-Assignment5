@@ -1,0 +1,141 @@
+.categories-page {
+  display: grid;
+  gap: 18px;
+}
+
+.category-form-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.category-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.category-form mat-form-field {
+  width: 100%;
+}
+
+.icon-picker {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-picker-label {
+  margin-bottom: 6px;
+  font-size: 0.86rem;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.icon-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:host ::ng-deep .mat-mdc-menu-panel.icon-menu {
+  max-width: none !important;
+}
+
+:host ::ng-deep .icon-menu .mat-mdc-menu-content {
+  padding: 8px;
+  overflow-x: hidden;
+}
+
+.icon-dropdown-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  width: min(280px, calc(100vw - 48px));
+  max-height: 240px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.icon-dropdown-grid button {
+  border-radius: 8px;
+}
+
+.icon-dropdown-grid button:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.icon-dropdown-grid .selected-icon {
+  background: rgba(25, 118, 210, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(25, 118, 210, 0.45);
+}
+
+.active-check {
+  display: flex;
+  align-items: center;
+  grid-column: 1 / -1;
+  padding-top: 2px;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.category-list-section h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.category-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.category-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.category-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.category-name {
+  font-weight: 600;
+}
+
+.category-subtext {
+  font-size: 0.84rem;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.empty-card {
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 800px) {
+  .category-form {
+    grid-template-columns: 1fr;
+  }
+
+  .icon-dropdown-grid {
+    width: min(280px, calc(100vw - 48px));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

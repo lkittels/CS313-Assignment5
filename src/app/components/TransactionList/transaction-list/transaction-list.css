@@ -4,21 +4,27 @@
 
 .actions-row {
   display: flex;
-  gap: 12px;
-  padding: 0 16px 8px;
-  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.filter-row {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(140px, 1fr));
-  gap: 12px;
+.category-option,
+.category-cell {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 8px;
 }
 
-.filter-row mat-form-field {
-  width: 100%;
+.category-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.category-option-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .empty-state {

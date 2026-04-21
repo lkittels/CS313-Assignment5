@@ -43,7 +43,18 @@
                 required
               >
                 @for (categoryOption of expenseItemService.allCategories(); track categoryOption) {
-                  <mat-option [value]="categoryOption">{{ categoryOption }}</mat-option>
+                  <mat-option [value]="categoryOption">
+                    <span class="category-option">
+                      <span
+                        class="category-color-dot"
+                        [style.background]="expenseItemService.getCategoryColor(categoryOption)"
+                      ></span>
+                      <mat-icon class="category-option-icon">{{
+                        expenseItemService.getCategoryIcon(categoryOption)
+                      }}</mat-icon>
+                      <span>{{ categoryOption }}</span>
+                    </span>
+                  </mat-option>
                 }
                 <mat-option [value]="customCategoryValue">Custom category...</mat-option>
               </mat-select>

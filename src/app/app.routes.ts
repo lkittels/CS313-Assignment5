@@ -1,22 +1,32 @@
 import { Routes } from '@angular/router';
-import { ExpenseItem } from './components/ExpenseItem/expense-item/expense-item';
-import { Dashboard } from './components/Dashboard/dashboard/dashboard';
-import { TransactionList } from './components/TransactionList/transaction-list/transaction-list';
 
 export const routes: Routes = [
   {
     path: '',
-    component: Dashboard,
+    loadComponent: () =>
+      import('./components/Dashboard/dashboard/dashboard').then((m) => m.DashboardComponent),
     title: 'Dashboard',
   },
   {
     path: 'add-transaction',
-    component: ExpenseItem,
+    loadComponent: () =>
+      import('./components/ExpenseItem/expense-item/expense-item').then(
+        (m) => m.ExpenseItemComponent,
+      ),
     title: 'New Transaction',
   },
   {
     path: 'transactions',
-    component: TransactionList,
+    loadComponent: () =>
+      import('./components/TransactionList/transaction-list/transaction-list').then(
+        (m) => m.TransactionListComponent,
+      ),
     title: 'Transactions',
+  },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('./components/categories/categories/categories').then((m) => m.CategoriesComponent),
+    title: 'Categories',
   },
 ];
