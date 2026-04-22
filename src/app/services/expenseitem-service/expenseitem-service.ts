@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { auth } from '../../firebase.config';
 import { Expense, ExpenseCategory, ExpenseType } from '../../models/expense';
 import { CategoryService } from '../category-services/category-services';
 import { ExpenseService } from '../expense-services/expense-service';
@@ -17,7 +18,8 @@ export class ExpenseItemService {
 
   readonly editingExpense = this.expenseService.editingExpense;
 
-  readonly allCategories = this.expenseService.allCategories;
+  readonly predefinedCategories = this.categoryService.predefinedCategoryList;
+  readonly customCategories = this.categoryService.userDefinedCategories;
 
   readonly amount = signal<number | null>(null);
   readonly category = signal<string>('');
@@ -47,7 +49,13 @@ export class ExpenseItemService {
       return;
     }
 
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      return;
+    }
+
     const expense: Expense = {
+      userId,
       amount: this.amount() ?? 0,
       category: resolvedCategory,
       date: this.date(),
@@ -107,7 +115,7 @@ export class ExpenseItemService {
     this.notes.set(expense.notes ?? '');
     this.type.set(expense.type);
 
-    if (this.allCategories().includes(expense.category as ExpenseCategory)) {
+    if (this.predefinedCategories().includes(expense.category as ExpenseCategory)) {
       this.category.set(expense.category);
       this.customCategory.set('');
       return;

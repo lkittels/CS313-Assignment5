@@ -1,4 +1,5 @@
 import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { onAuthStateChanged, type Unsubscribe as AuthUnsubscribe } from 'firebase/auth';
 import { Expense, ExpenseCategory } from '../../models/expense';
 import {
   addDoc,
@@ -6,10 +7,12 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  query,
   updateDoc,
+  where,
   type Unsubscribe,
 } from 'firebase/firestore';
-import { db } from '../../firebase.config';
+import { auth, db } from '../../firebase.config';
 
 @Injectable({
   providedIn: 'root',
@@ -72,21 +75,34 @@ export class ExpenseService implements OnDestroy {
 
   private expenseCollection = collection(db, 'expenses');
   private expenseSnapshotUnsubscribe: Unsubscribe | null = null;
+  private authUnsubscribe: AuthUnsubscribe | null = null;
 
   //READ (real-time)
   loadExpenses() {
-    if (this.expenseSnapshotUnsubscribe) {
+    if (this.authUnsubscribe) {
       return;
     }
 
-    this.expenseSnapshotUnsubscribe = onSnapshot(this.expenseCollection, (snapshot) => {
-      const expensesData = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-        date: this.normalizeDate(doc.data()['date']),
-      })) as Expense[];
+    this.authUnsubscribe = onAuthStateChanged(auth, (user) => {
+      this.expenseSnapshotUnsubscribe?.();
+      this.expenseSnapshotUnsubscribe = null;
 
-      this.expenses.set(expensesData);
+      if (!user) {
+        this.expenses.set([]);
+        return;
+      }
+
+      const expensesQuery = query(this.expenseCollection, where('userId', '==', user.uid));
+
+      this.expenseSnapshotUnsubscribe = onSnapshot(expensesQuery, (snapshot) => {
+        const expensesData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          date: this.normalizeDate(doc.data()['date']),
+        })) as Expense[];
+
+        this.expenses.set(expensesData);
+      });
     });
   }
 
@@ -100,7 +116,15 @@ export class ExpenseService implements OnDestroy {
 
   //CREATE
   async addExpense(expense: Expense) {
-    await addDoc(this.expenseCollection, expense);
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      throw new Error('User must be logged in to add an expense.');
+    }
+
+    await addDoc(this.expenseCollection, {
+      ...expense,
+      userId,
+    });
   }
   //UPDATE
   async updateExpense(id: string, expense: Partial<Expense>) {
@@ -114,6 +138,8 @@ export class ExpenseService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.authUnsubscribe?.();
+    this.authUnsubscribe = null;
     this.expenseSnapshotUnsubscribe?.();
     this.expenseSnapshotUnsubscribe = null;
   }

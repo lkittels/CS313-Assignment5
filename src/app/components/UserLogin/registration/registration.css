@@ -1,0 +1,65 @@
+.auth-card {
+  max-width: 420px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  margin: 0 0 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+input {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #c7d1d8;
+  border-radius: 8px;
+}
+
+button {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: #146c94;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.field-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.82rem;
+}
+
+.submit-error,
+.submit-success {
+  margin: 0.8rem 0 0;
+  font-weight: 600;
+}
+
+.submit-error {
+  color: #b42318;
+}
+
+.submit-success {
+  color: #166534;
+}

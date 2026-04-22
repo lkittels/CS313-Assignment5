@@ -33,6 +33,8 @@ export class ExpenseItemComponent {
 
   readonly customCategoryValue = this.expenseItemService.customCategoryValue;
   readonly editingExpense = this.expenseItemService.editingExpense;
+  readonly predefinedCategories = this.expenseItemService.predefinedCategories;
+  readonly customCategories = this.expenseItemService.customCategories;
 
   readonly amount = this.expenseItemService.amount;
   readonly category = this.expenseItemService.category;

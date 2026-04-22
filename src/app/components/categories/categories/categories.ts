@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { auth } from '../../../firebase.config';
 import { Category } from '../../../models/category';
 import { CategoryService } from '../../../services/category-services/category-services';
 
@@ -146,7 +147,13 @@ export class CategoriesComponent implements OnInit {
       return;
     }
 
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      return;
+    }
+
     const payload: Category = {
+      userId,
       name: trimmedName,
       icon: formValue.icon,
       color: formValue.color,

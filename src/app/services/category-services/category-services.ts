@@ -1,4 +1,5 @@
 import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { onAuthStateChanged, type Unsubscribe as AuthUnsubscribe } from 'firebase/auth';
 import { ExpenseCategory } from '../../models/expense';
 import {
   addDoc,
@@ -6,10 +7,12 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  query,
   updateDoc,
+  where,
   type Unsubscribe,
 } from 'firebase/firestore';
-import { db } from '../../firebase.config';
+import { auth, db } from '../../firebase.config';
 import { Category } from '../../models/category';
 
 @Injectable({
@@ -69,6 +72,7 @@ export class CategoryService implements OnDestroy {
 
   private categoryCollection = collection(db, 'categories');
   private categorySnapshotUnsubscribe: Unsubscribe | null = null;
+  private authUnsubscribe: AuthUnsubscribe | null = null;
 
   monthlyBudget(categoryName: string): number {
     const category = this.findCategoryByName(categoryName);
@@ -97,26 +101,51 @@ export class CategoryService implements OnDestroy {
 
   //READ (real-time)
   loadCategories() {
-    if (this.categorySnapshotUnsubscribe) {
+    if (this.authUnsubscribe) {
       return;
     }
 
-    this.categorySnapshotUnsubscribe = onSnapshot(this.categoryCollection, (snapshot) => {
-      const categoriesData = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      })) as Category[];
+    this.authUnsubscribe = onAuthStateChanged(auth, (user) => {
+      this.categorySnapshotUnsubscribe?.();
+      this.categorySnapshotUnsubscribe = null;
 
-      this.categories.set(categoriesData);
+      if (!user) {
+        this.categories.set([]);
+        return;
+      }
+
+      const categoryQuery = query(this.categoryCollection, where('userId', '==', user.uid));
+
+      this.categorySnapshotUnsubscribe = onSnapshot(categoryQuery, (snapshot) => {
+        const categoriesData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Category[];
+
+        this.categories.set(categoriesData);
+      });
     });
   }
 
   //CREATE
   async addCategory(category: Category) {
-    await addDoc(this.categoryCollection, category);
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      throw new Error('User must be logged in to add a category.');
+    }
+
+    await addDoc(this.categoryCollection, {
+      ...category,
+      userId,
+    });
   }
 
   async ensureCategoryExists(categoryName: string) {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      return;
+    }
+
     const normalizedName = categoryName.trim();
     if (!normalizedName) {
       return;
@@ -131,6 +160,7 @@ export class CategoryService implements OnDestroy {
     }
 
     await this.addCategory({
+      userId,
       name: normalizedName,
       icon: '',
       color: '',
@@ -157,6 +187,8 @@ export class CategoryService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.authUnsubscribe?.();
+    this.authUnsubscribe = null;
     this.categorySnapshotUnsubscribe?.();
     this.categorySnapshotUnsubscribe = null;
   }

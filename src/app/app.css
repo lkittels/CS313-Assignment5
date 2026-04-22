@@ -4,8 +4,50 @@
   flex-direction: column;
 }
 
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline: 0.8rem;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.primary-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.primary-nav a,
+.primary-nav button {
+  margin: 0;
+}
+
+.active-link {
+  font-weight: 700;
+}
+
 .page-container {
   flex: 1;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+  }
+
+  .primary-nav {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
 }
 
 .app-footer {

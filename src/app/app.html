@@ -2,12 +2,22 @@
   <mat-toolbar color="primary" class="topbar" aria-label="Application navigation">
     <span class="brand" routerLink="">Budget Lens</span>
 
-    <nav class="primary-nav" aria-label="Primary">
-      <a mat-button routerLink="/transactions" routerLinkActive="active-link">Transactions</a>
-      <a mat-button routerLink="/add-transaction" routerLinkActive="active-link">Add Transaction</a>
-      <a mat-button disabled>Budget</a>
-      <a mat-button routerLink="/categories" routerLinkActive="active-link">Categories</a>
-    </nav>
+    @if (isAuthenticated()) {
+      <nav class="primary-nav" aria-label="Primary">
+        <a mat-button routerLink="/transactions" routerLinkActive="active-link">Transactions</a>
+        <a mat-button routerLink="/add-transaction" routerLinkActive="active-link"
+          >Add Transaction</a
+        >
+        <a mat-button routerLink="/profile" routerLinkActive="active-link">Profile</a>
+        <a mat-button routerLink="/categories" routerLinkActive="active-link">Categories</a>
+        <button mat-button type="button" (click)="logout()">Logout</button>
+      </nav>
+    } @else {
+      <nav class="primary-nav" aria-label="Primary">
+        <a mat-button routerLink="/login" routerLinkActive="active-link">Login</a>
+        <a mat-button routerLink="/register" routerLinkActive="active-link">Register</a>
+      </nav>
+    }
   </mat-toolbar>
 
   <main class="page-container">
