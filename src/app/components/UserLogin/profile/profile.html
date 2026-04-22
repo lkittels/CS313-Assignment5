@@ -12,7 +12,7 @@
       }
 
       <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" autocomplete="email" />
+      <input id="email" type="email" formControlName="email" autocomplete="email" readonly />
       @if (profileForm.controls.email.touched && profileForm.controls.email.hasError('required')) {
         <p class="field-error">Email is required.</p>
       }

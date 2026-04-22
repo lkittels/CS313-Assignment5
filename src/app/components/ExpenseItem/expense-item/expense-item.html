@@ -42,6 +42,23 @@
                 #categoryModel="ngModel"
                 required
               >
+                <mat-select-trigger>
+                  @if (category() && category() !== customCategoryValue) {
+                    <span class="category-option">
+                      <span
+                        class="category-color-dot"
+                        [style.background]="expenseItemService.getCategoryColor(category())"
+                      ></span>
+                      <mat-icon class="category-option-icon">{{
+                        expenseItemService.getCategoryIcon(category())
+                      }}</mat-icon>
+                      <span>{{ category() }}</span>
+                    </span>
+                  } @else if (category() === customCategoryValue) {
+                    <span>Custom category...</span>
+                  }
+                </mat-select-trigger>
+
                 @for (categoryOption of predefinedCategories(); track categoryOption) {
                   <mat-option [value]="categoryOption">
                     <span class="category-option">
@@ -73,6 +90,21 @@
                   #customCategoryModel="ngModel"
                   required
                 >
+                  <mat-select-trigger>
+                    @if (customCategory()) {
+                      <span class="category-option">
+                        <span
+                          class="category-color-dot"
+                          [style.background]="expenseItemService.getCategoryColor(customCategory())"
+                        ></span>
+                        <mat-icon class="category-option-icon">{{
+                          expenseItemService.getCategoryIcon(customCategory())
+                        }}</mat-icon>
+                        <span>{{ customCategory() }}</span>
+                      </span>
+                    }
+                  </mat-select-trigger>
+
                   @for (customCategoryOption of customCategories(); track customCategoryOption) {
                     <mat-option [value]="customCategoryOption">
                       <span class="category-option">

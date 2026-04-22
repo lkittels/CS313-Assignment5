@@ -73,10 +73,6 @@
           }
         </mat-form-field>
 
-        <mat-checkbox class="active-check" formControlName="isActive">
-          Active Category
-        </mat-checkbox>
-
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="resetForm()">Clear</button>
           <button mat-flat-button color="primary" type="submit">
@@ -109,9 +105,6 @@
                     <div class="category-name">{{ category.name }}</div>
                     <div class="category-subtext">
                       Budget: {{ category.monthlyBudget | currency }}
-                    </div>
-                    <div class="category-subtext">
-                      Status: {{ category.isActive ? 'Active' : 'Inactive' }}
                     </div>
                   </div>
                 </div>

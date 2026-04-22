@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import {
+  onAuthStateChanged,
+  updateEmail,
+  updateProfile,
+  type User as FirebaseUser,
+} from 'firebase/auth';
 import { auth } from '../../../firebase.config';
 import { UserService } from '../../../services/user-services/user.services';
 
@@ -49,19 +54,66 @@ export class ProfileComponent implements OnInit {
     this.errorMessage.set('');
 
     const formValue = this.profileForm.getRawValue();
+    const trimmedName = formValue.name.trim();
+    const trimmedEmail = formValue.email.trim().toLowerCase();
 
     try {
+      if (trimmedName !== (currentUser.displayName ?? '')) {
+        await updateProfile(currentUser, { displayName: trimmedName });
+      }
+
+      if (trimmedEmail !== (currentUser.email ?? '')) {
+        await updateEmail(currentUser, trimmedEmail);
+      }
+
       await this.userService.updateUserProfile(currentUser.uid, {
-        name: formValue.name.trim(),
-        email: formValue.email.trim(),
+        name: trimmedName,
+        email: trimmedEmail,
         budgetGoal: formValue.budgetGoal,
       });
       this.successMessage.set('Profile updated successfully.');
-    } catch {
-      this.errorMessage.set('Unable to update profile right now. Please try again.');
+    } catch (error: unknown) {
+      this.errorMessage.set(this.mapProfileUpdateError(error));
     } finally {
       this.isSaving.set(false);
     }
+  }
+
+  private mapProfileUpdateError(error: unknown): string {
+    const errorCode = this.getErrorCode(error);
+    if (!errorCode) {
+      return 'Unable to update profile right now. Please try again.';
+    }
+
+    switch (errorCode) {
+      case 'auth/requires-recent-login':
+        return 'For security, please log out and log back in before changing your email.';
+      case 'auth/email-already-in-use':
+        return 'That email is already in use by another account.';
+      case 'auth/invalid-email':
+        return 'Please enter a valid email address.';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Please wait a moment and try again.';
+      case 'auth/network-request-failed':
+        return 'Network error. Check your connection and try again.';
+      case 'permission-denied':
+        return 'You do not have permission to update this profile.';
+      case 'unauthenticated':
+        return 'Your session has expired. Please log in again.';
+      case 'unavailable':
+        return 'Service is temporarily unavailable. Please try again shortly.';
+      default:
+        return 'Unable to update profile right now. Please try again.';
+    }
+  }
+
+  private getErrorCode(error: unknown): string | null {
+    if (typeof error !== 'object' || error === null || !('code' in error)) {
+      return null;
+    }
+
+    const code = (error as { code: unknown }).code;
+    return typeof code === 'string' ? code : null;
   }
 
   private async loadProfile(): Promise<void> {

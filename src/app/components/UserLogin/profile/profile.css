@@ -28,6 +28,12 @@ input {
   border-radius: 8px;
 }
 
+input[readonly] {
+  background: #f6f8fa;
+  color: #667085;
+  cursor: not-allowed;
+}
+
 button {
   margin-top: 0.75rem;
   padding: 0.6rem 0.8rem;

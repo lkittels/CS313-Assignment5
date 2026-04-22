@@ -10,7 +10,6 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -26,7 +25,6 @@ import { CategoryService } from '../../../services/category-services/category-se
     ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
-    MatCheckboxModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -47,7 +45,6 @@ export class CategoriesComponent implements OnInit {
     icon: ['category', [Validators.required]],
     color: ['#607d8b', [Validators.required]],
     monthlyBudget: [0, [Validators.required, Validators.min(0)]],
-    isActive: [true],
   });
 
   readonly isNameValid = computed(() => this.categoryForm.controls.name.valid);
@@ -158,7 +155,7 @@ export class CategoriesComponent implements OnInit {
       icon: formValue.icon,
       color: formValue.color,
       monthlyBudget: formValue.monthlyBudget,
-      isActive: formValue.isActive,
+      isActive: true,
       createdAt: Date.now(),
     };
 
@@ -169,7 +166,6 @@ export class CategoriesComponent implements OnInit {
         icon: payload.icon,
         color: payload.color,
         monthlyBudget: payload.monthlyBudget,
-        isActive: payload.isActive,
       });
     } else {
       await this.categoryService.addCategory(payload);
@@ -185,7 +181,6 @@ export class CategoriesComponent implements OnInit {
       icon: category.icon || 'category',
       color: category.color || '#607d8b',
       monthlyBudget: category.monthlyBudget ?? 0,
-      isActive: category.isActive ?? true,
     });
     this.formSubmitted.set(false);
   }
@@ -197,7 +192,6 @@ export class CategoriesComponent implements OnInit {
       icon: 'category',
       color: '#607d8b',
       monthlyBudget: 0,
-      isActive: true,
     });
     this.formSubmitted.set(false);
   }

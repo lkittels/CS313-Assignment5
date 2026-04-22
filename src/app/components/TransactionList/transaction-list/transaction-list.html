@@ -60,6 +60,23 @@
           [ngModel]="filters().category"
           (ngModelChange)="onCategoryFilterChange($event)"
         >
+          <mat-select-trigger>
+            @if (filters().category) {
+              <span class="category-option">
+                <span
+                  class="category-color-dot"
+                  [style.background]="getCategoryColor(filters().category)"
+                ></span>
+                <mat-icon class="category-option-icon">{{
+                  getCategoryIcon(filters().category)
+                }}</mat-icon>
+                <span>{{ filters().category }}</span>
+              </span>
+            } @else {
+              <span>All categories</span>
+            }
+          </mat-select-trigger>
+
           <mat-option value="">All categories</mat-option>
           @for (categoryOption of allCategories(); track categoryOption) {
             <mat-option [value]="categoryOption">
