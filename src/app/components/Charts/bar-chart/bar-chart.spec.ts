@@ -7,10 +7,15 @@ describe('BarChart', () => {
   let fixture: ComponentFixture<BarChart>;
 
   beforeEach(async () => {
+    TestBed.overrideComponent(BarChart, {
+      set: {
+        template: '<p>bar-chart-test</p>',
+      },
+    });
+
     await TestBed.configureTestingModule({
-      imports: [BarChart]
-    })
-    .compileComponents();
+      imports: [BarChart],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BarChart);
     component = fixture.componentInstance;

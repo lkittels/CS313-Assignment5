@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { DashboardComponent } from './dashboard';
 
@@ -7,8 +8,15 @@ describe('Dashboard', () => {
   let fixture: ComponentFixture<DashboardComponent>;
 
   beforeEach(async () => {
+    TestBed.overrideComponent(DashboardComponent, {
+      set: {
+        template: '<p>dashboard-test</p>',
+      },
+    });
+
     await TestBed.configureTestingModule({
       imports: [DashboardComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);

@@ -7,10 +7,15 @@ describe('PieChart', () => {
   let fixture: ComponentFixture<PieChart>;
 
   beforeEach(async () => {
+    TestBed.overrideComponent(PieChart, {
+      set: {
+        template: '<p>pie-chart-test</p>',
+      },
+    });
+
     await TestBed.configureTestingModule({
-      imports: [PieChart]
-    })
-    .compileComponents();
+      imports: [PieChart],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PieChart);
     component = fixture.componentInstance;

@@ -4,7 +4,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { BarChart } from '../../Charts/bar-chart/bar-chart';
 import { PieChart } from '../../Charts/pieChart/pie-chart/pie-chart';
-import { RouterLink } from '@angular/router';
 import { CategoryService } from '../../../services/category-services/category-services';
 import { ExpenseService } from '../../../services/expense-services/expense-service';
 
@@ -36,7 +35,7 @@ type HighestExpense = {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatGridListModule, MatIconModule, BarChart, PieChart, RouterLink, DecimalPipe],
+  imports: [MatGridListModule, MatIconModule, BarChart, PieChart, DecimalPipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
